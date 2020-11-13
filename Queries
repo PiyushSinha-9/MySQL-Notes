@@ -1,0 +1,31 @@
+
+DBMS should do -: 
+ C R U D 
+ Create 
+ Read / receive 
+ update
+ delete 
+
+ Relational database (SQL)     and    Non- Relational (noSQL)
+
+    TAbLE                                   key-value pairs, Documents, Graphs, etc
+    MysqL oracle postgreSQl
+
+  
+ 
+
+
+
+TERMiNAL Command
+  echo 'export PATH=/usr/local/mysql/bin:$PATH' >> ~/.bash_profile      
+
+// to start mysql 
+mysql -u root -p 
+//enter password
+
+
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'password';     // here password is the new password I wanted to keep
+
+////////  TO CREATE a database
+create database giraffe
+
