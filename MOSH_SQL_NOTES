@@ -305,3 +305,223 @@ WHERE o.customer_id = c.customer_id;
 -- InCase you forgot where claus we will end up with Cross JOIN
  
 
+-- ----------------------		Outer Join
+
+-- Inner Join or Join means the same
+-- Outer Join has 2 types LEFT and RIGHT JOiN
+-- LEFT OUTER JOIN is same as LEFT JOIN
+-- RIGHT OUTER JOIN is same as RIGHT JOIN
+
+USE sql_store;
+
+		-- below Code Shows only customers who made the order
+SELECT 
+	c.customer_id,
+    c.first_name,
+    o.order_id
+FROM customers c
+JOIN orders o
+	ON c.customer_id = o.customer_id
+ORDER BY c.customer_id;
+
+				-- below code shows all Customers
+SELECT 
+	c.customer_id,
+    c.first_name,
+    o.order_id
+FROM customers c
+LEFT JOIN orders o
+	ON c.customer_id = o.customer_id
+ORDER BY c.customer_id;
+
+				-- Exercise
+
+SELECT 
+	p.product_id,
+    p.name,
+    oi.quantity
+FROM products p
+LEFT JOIN order_items oi
+	ON oi.product_id = p.product_id;
+
+
+-- ----------------------		Outer Join on Multiple tables
+
+SELECT 
+	o.order_date,
+    o.order_id,
+    c.first_name,
+    s.name AS shipper,
+    os.name AS status
+FROM orders o
+JOIN customers c
+	ON o.customer_id = c.customer_id
+LEFT JOIN shippers s
+	ON o.shipper_id = s.shipper_id
+JOIN order_statuses os
+	ON o.status = os.order_status_id
+
+-- ----------------------		SELF OUTER JOIN
+
+USE sql_hr;
+
+
+SELECT 
+	e1.employee_id, 
+    e1.first_name ,
+    e2.employee_id as Manager_id, 
+    e2.first_name as manager_name
+FROM employees e1
+LEFT JOIN employees e2
+	ON e1.reports_to = e2.employee_id;
+
+
+-- ----------------------		THE USING CLAUSE
+
+USE sql_store;
+
+SELECT 
+	o.order_id,
+    c.first_name
+FROM orders o
+JOIN customers c
+	-- ON o.customer_id = c.customer_id
+    USING (customer_id);
+
+-- Commented statement is same as USING statement
+-- USING can be used only where Attributes name is same
+-- USING (ATTRIBUTE 1, ATTRIBUTE 2);
+
+				-- Exercise
+USE sql_invoicing;
+
+SELECT 
+	p.date,
+    c.name,
+    p.amount,
+    pm.name
+FROM payments p
+JOIN clients c
+	-- ON p.client_id = c.client_id
+	USING (client_id)
+JOIN payment_methods pm
+	ON p.payment_method = pm.payment_method_id;
+
+
+-- ----------------------		NATURAL JOIN
+
+-- NOT RECOMMEDED
+
+SELECT *
+FROM orders o
+NATURAL JOIN customers c;
+
+-- NO control over it
+
+-- ----------------------		CROSS JOIN
+
+-- Combine 
+-- prefer explicit 
+
+-- explicit Syntax
+SELECT *
+FROM customers c
+CROSS JOIN products p;
+
+
+-- Implicit Syntax
+SELECT *
+FROM customers c, products p;
+
+
+-- ----------------------		UNIONS
+
+USE sql_store;
+
+SELECT 
+	order_id,
+    order_date,
+    'Active' AS status
+FROM orders 
+WHERE order_date >= '2019-01-01'
+UNION
+SELECT 
+	order_id,
+    order_date,
+    'Archived' AS status
+FROM orders 
+WHERE order_date < '2019-01-01';  
+
+-- 	2000 Bronze ;;2000-3000 silver ;; 3000+ Gold
+
+SELECT 
+	customer_id,
+    first_name,
+    points,
+    'Bronze' as type
+FROM customers
+WHERE points < 2000 
+UNION
+SELECT 
+	customer_id,
+    first_name,
+    points,
+    'Silver' as type
+FROM customers
+WHERE points >= 2000 AND points <= 3000
+UNION
+SELECT 
+	customer_id,
+    first_name,
+    points,
+    'Gold' as type
+FROM customers
+WHERE points > 3000
+ORDER BY first_name;
+
+
+-----------------------------------------------------------------------
+
+Gernal POINTS 
+PK -> Primary KEy
+NN -> NOT NULL
+AI -> Auto increment
+Default -> NULL
+
+
+-----------------------------------------------------------------------
+
+
+-- ----------------------		Inserting Single Row
+
+USE sql_store;
+
+INSERT INTO customers
+VALUES (
+		DEFAULT, 
+		'John', 
+        'Smith', 
+        '2020-01-01', 
+        NULL,
+        'address',
+        'city',
+        'CA',
+        DEFAULT );
+
+INSERT INTO customers (first_name, last_name)
+VALUES (
+		'John', 
+        'Smith');
+        
+-- ----------------------		Inserting Multiple Rows
+
+INSERT INTO shippers (name)
+VALUES  ('Shippers1'),
+		('Shippers2'),
+        ('Shippers3');
+
+
+INSERT INTO products 
+VALUES  (DEFAULT, 'name1', 10, 5.6),
+		(DEFAULT, 'name2', 11, 91.62),
+        (DEFAULT, 'name3', 12, 7);
